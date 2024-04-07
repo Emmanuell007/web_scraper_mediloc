@@ -10,10 +10,6 @@ import re
 
 app = Flask(__name__)
 
-@app.route('/')
-def root():
-    return "huevos al furro"
-
 def encontrar_cantidad(cadena):
     patron = r"(\d+)\s*(Tableta|Cápsula|Pastilla)s?"
     coincidencias = re.search(patron, cadena, re.IGNORECASE)
@@ -24,13 +20,19 @@ def encontrar_cantidad(cadena):
     else:
         return 0, None
 
+@app.route('/')
+def root():
+    return "huevos al furro"
+
+
 @app.route('/scrape', methods=['POST'])
 def scrape_productos():
     search_term = request.json.get('medicamentos', '')
     
-    service = Service(ChromeDriverManager().install())
-    options = webdriver.ChromeOptions()
+    options = Options()
+    options.add_argument("--headless")
     options.add_argument("--log-level=3") 
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     
     medicamentos_lista = search_term.split("\n")
