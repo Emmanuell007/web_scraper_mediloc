@@ -10,6 +10,10 @@ import re
 
 app = Flask(__name__)
 
+@app.route('/')
+def root():
+    return "huevos al furro"
+
 def encontrar_cantidad(cadena):
     patron = r"(\d+)\s*(Tableta|Cápsula|Pastilla)s?"
     coincidencias = re.search(patron, cadena, re.IGNORECASE)
