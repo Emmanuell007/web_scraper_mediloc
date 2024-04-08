@@ -59,20 +59,20 @@ def scrape_productos():
                     if tip2 !="ml":
                         cantidad = f"{cant2} {tip2}s"
                         medicamento_actual["Presentaciones"].append({
-                            "Precio": precio_num,
+                            "Precio": product_cost,
                             "Farmacia": "Gi",
                             "Cantidad": cantidad
                         })
                     else:
                         cantidad = f"{cant2} {tip2}"
                         medicamento_actual["Presentaciones"].append({
-                            "Precio": precio_num,
+                            "Precio": product_cost,
                             "Farmacia": "Gi",
                             "Cantidad": cantidad
                         })
                 else:
                     medicamento_actual["Presentaciones"].append({
-                        "Precio": precio_num,
+                        "Precio": product_cost,
                         "Farmacia": "Gi",
                         "Cantidad": "No disponible"
                     })
