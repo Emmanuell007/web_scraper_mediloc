@@ -27,8 +27,12 @@ def scrape_productos():
 
     for product in medicamentos_lista:
         nombre = product.split(" ")
+        if nombre[0].strip() == "":
+            titulo = nombre[1]
+        else:
+            titulo = nombre[0]
         medicamento_actual = {
-            "Nombre": nombre[0],
+            "Nombre": titulo,
             "Presentaciones": []
         }
         
