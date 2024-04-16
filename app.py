@@ -25,15 +25,8 @@ def scrape_productos():
     search_term = request.json.get('medicamentos', '')
     medicamentos_lista = search_term.split("\n")
     for product in medicamentos_lista:
-        
-        nombre = product.split(" ")
-        if nombre[0].strip() == "":
-            titulo = nombre[1]
-        else:
-            titulo = nombre[0]
-
         medicamento_actual = {
-            "Nombre": titulo,
+            "Nombre": product,
             "Presentaciones": []
         }
         
@@ -49,8 +42,15 @@ def scrape_productos():
             product_price_elements = soup.select("span.woocommerce-Price-amount")
 
             for i in range(num_products):
+                
                 product_name = results[i].get_text(strip=True)
-
+                if product_name == "Lo-Bruquin c/2 tabletas":
+                    medicamento_actual["Presentaciones"].append({
+                        "Precio": 0,
+                        "Descripción": "No disponible",
+                        "Cantidad": "No disponible"
+                    })
+                    continue
                 precio_num = product_price_elements[i].text
 
                 product_cost = "".join(c for c in precio_num if c.isdigit() or c == '.')
