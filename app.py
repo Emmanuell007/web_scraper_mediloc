@@ -24,13 +24,14 @@ def scrape_productos():
     }
     search_term = request.json.get('medicamentos', '')
     medicamentos_lista = search_term.split("\n")
-
     for product in medicamentos_lista:
+        
         nombre = product.split(" ")
         if nombre[0].strip() == "":
             titulo = nombre[1]
         else:
             titulo = nombre[0]
+
         medicamento_actual = {
             "Nombre": titulo,
             "Presentaciones": []
@@ -45,10 +46,11 @@ def scrape_productos():
         
         if num_results != 0:
             num_products = min(num_results, 3)
-            
+            product_price_elements = soup.select("span.woocommerce-Price-amount")
+
             for i in range(num_products):
                 product_name = results[i].get_text(strip=True)
-                product_price_elements = soup.select("span.woocommerce-Price-amount")
+
                 precio_num = product_price_elements[i].text
 
                 product_cost = "".join(c for c in precio_num if c.isdigit() or c == '.')
@@ -60,32 +62,33 @@ def scrape_productos():
                         cantidad = f"{cant2} {tip2}s"
                         medicamento_actual["Presentaciones"].append({
                             "Precio": product_cost,
-                            "Farmacia": "Gi",
+                            "Descripción": product_name,
                             "Cantidad": cantidad
                         })
                     else:
                         cantidad = f"{cant2} {tip2}"
                         medicamento_actual["Presentaciones"].append({
                             "Precio": product_cost,
-                            "Farmacia": "Gi",
+                            "Descripción": product_name,
                             "Cantidad": cantidad
                         })
                 else:
                     medicamento_actual["Presentaciones"].append({
                         "Precio": product_cost,
-                        "Farmacia": "Gi",
+                        "Descripción": product_name,
                         "Cantidad": "No disponible"
                     })
         else:
             medicamento_actual["Presentaciones"].append({
                 "Precio": 0,
-                "Farmacia": "No disponible",
+                "Descripción": "No disponible",
                 "Cantidad": "No disponible"
             })
         
         medicamento["Medicamentos"].append(medicamento_actual)
 
     return jsonify(medicamento)
+
     
 if __name__ == '__main__':
     app.run()
